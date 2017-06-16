@@ -1,0 +1,19 @@
+.modal {
+  width: 400px;
+  height: 150px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+.modal-input {
+  width: 200px;
+  margin-right: 5px;
+  height: 25px;
+  font-size: 16px;
+}
+.modal-btn {
+  height: 30px;
+  margin-right: 5px;
+}

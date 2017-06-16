@@ -1,0 +1,19 @@
+.question-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.answer-btn {
+  min-width: 200px;
+  border: solid 1px gainsboro;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 3px 0px;
+  transition: .4;
+  cursor: pointer;
+}
+
+.answer-btn:hover {
+  border: solid 1px #DA2D7B;
+}
