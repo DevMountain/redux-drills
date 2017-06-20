@@ -86,7 +86,7 @@ You are in charge of building an app that can manage the guest list of DevMounta
     </div>
     ```
 
-<details><summary><code>Solution: App.js<code></summary>
+<details><summary><code>Solution: App.js</code></summary>
 ```import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './App.css';
@@ -271,4 +271,4 @@ export default function reducer(state = initialState, action) {
     - At this point, when you click on the edit button, the modal should appear and you should see the name you are editing in the input box.
     - Set up the component so that it is keeping track of any changes to the input box.
 7. By now, you are hopefully getting the hang of creating an action creator, importing the action creator and passing it in to the `connect` method, and then referencing it on `props`.
-    - Add functionality to the `update` button in `EditGuest.js` so that when it is clicked, it updates the guests name, and closes the modal. 
+    - Add functionality to the `update` button in `EditGuest.js` so that when it is clicked, it updates the guests name, and closes the modal.
