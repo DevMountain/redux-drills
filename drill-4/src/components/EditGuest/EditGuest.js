@@ -7,15 +7,9 @@ class EditGuest extends Component {
     this.state = {
       text: this.props.guest
     }
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.update = this.update.bind(this);
   }
 
-  handleInputChange(e) {
-    this.setState({
-      text: e.target.value
-    })
-  }
 
   update() {
     // update guest name function
@@ -29,12 +23,8 @@ class EditGuest extends Component {
       <div className="modal-bg">
         <div className="modal">
           <input
-            onChange={this.handleInputChange}
-            value={this.state.text}
-            type=""
             className="modal-input"/>
           <button
-            onClick={this.update}
             type=""
             className="modal-btn">Update</button>
           <button

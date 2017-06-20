@@ -1,36 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import './App.css';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      text: ''
-    }
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleInputChange(e) {
-    this.setState({
-      text: e.target.value
-    })
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    // add guest function here
-    this.setState({
-      text: ''
-    })
-  }
-
   render() {
     return (
       <div className="App">
         <h1>DevMountain Hackathon</h1>
         <h3>Guest List:</h3>
         <ul>
-          {{/*??*/}.map( (guest, i) => {
+          {this.props.list.map( (guest, i) => {
             return (
               <div key={i} className="list-item">
                 <li>{guest}</li>
@@ -39,22 +18,19 @@ class App extends Component {
             )
           })}
         </ul>
-        <form
-          onSubmit={this.handleSubmit}
-          className="add-guest"> Add guest: 
-              <input
-              value={this.state.text}
-              onChange={this.handleInputChange}
-              type="" className=""/>
-          <button
-            type=""
-            className="">Add</button>
-        </form>
+        <div className="add-guest">
+          Add guest: <input type="" className=""/>
+          <button type="" className="">Add</button>
+        </div>
       </div>
     );
   }
 }
 
-// mapStateToProps
+function mapStateToProps(state) {
+  return {
+    list: state.guests
+  };
+}
 
-// connect
+export default connect(mapStateToProps)(App);
