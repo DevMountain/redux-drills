@@ -13,8 +13,7 @@ You are in charge of building an app that can manage the guest list of DevMounta
 4. Inside of the `ducks` folder, create a file called `guestList.js`.
     - Create a reducer. The reducer is just a function that takes in state and an action. For now, have the reducer immediately return state. Export the reducer.
 
-  <details>
-  <summary> <code> Solution: src/ducks/guestList.js </code> </summary>  
+  <details><summary><code>Solution: src/ducks/guestList.js</code></summary>  
   ```
   const initialState = {}
 
@@ -29,9 +28,9 @@ You are in charge of building an app that can manage the guest list of DevMounta
     - In `store.js` import `createStore` ( from redux ) and the reducer.
     - Export the invocation of `createStore` with the reducer as the only argument.
 
-  <details>
-  <summary> <code> Solution: src/store.js </code> </summary>  
-  ```import { createStore } from 'redux';
+  <details><summary> <code> Solution: src/store.js</code></summary>  
+  ```
+  import { createStore } from 'redux';
   import guestlist_reducer from './ducks/guestList';
   export default createStore(guestlist_reducer);
   ```
@@ -43,10 +42,9 @@ You are in charge of building an app that can manage the guest list of DevMounta
     - Pass the store, as a prop, to `Provider`.
 
 
-  <details><summary> <code> Solution: src/index.js </code></summary>
-
-
-  ```import React from 'react';
+  <details><summary><code>Solution: src/index.js</code></summary>
+  ```
+  import React from 'react';
 
   import ReactDOM from 'react-dom';
   import { Provider } from 'react-redux';
@@ -87,7 +85,8 @@ You are in charge of building an app that can manage the guest list of DevMounta
     ```
 
 <details><summary><code>Solution: App.js</code></summary>
-```import React, { Component } from 'react';
+```
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './App.css';
 
@@ -144,7 +143,8 @@ export default connect(mapStateToProps)(App);
 5. You should be able to add guests to the list now. Following a similar process as you did add a guest, add the functionality of removing a guest when the `Remove` button is clicked.
 
 <details><summary><code>Solution: App.js</code></summary>
-```import React, { Component } from 'react';
+```
+import React, { Component } from 'react';
 import { addGuest, removeGuest } from './ducks/guestList';
 import { connect } from 'react-redux';
 import './App.css';
@@ -211,7 +211,8 @@ export default connect(mapStateToProps,{ addGuest, removeGuest })(App);
 ```
 </details>
 <details><summary><code>Solution: guestList.js</code></summary>
-```const ADD_GUEST = 'ADD_GUEST';
+```
+const ADD_GUEST = 'ADD_GUEST';
 const REMOVE_GUEST = 'REMOVE_GUEST';
 
 const initialState = {
