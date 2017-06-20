@@ -13,7 +13,8 @@ You are in charge of building an app that can manage the guest list of DevMounta
 4. Inside of the `ducks` folder, create a file called `guestList.js`.
     - Create a reducer. The reducer is just a function that takes in state and an action. For now, have the reducer immediately return state. Export the reducer.
 
-  <details><summary><code>Solution: src/ducks/guestList.js</code></summary>  
+  **Solution: src/ducks/guestList.js**
+
   ```
   const initialState = {}
 
@@ -22,19 +23,18 @@ You are in charge of building an app that can manage the guest list of DevMounta
   }
 
   ```
-  </details>
 
 5. Create a `store.js` file in the `src` folder.
     - In `store.js` import `createStore` ( from redux ) and the reducer.
     - Export the invocation of `createStore` with the reducer as the only argument.
 
-  <details><summary> <code> Solution: src/store.js</code></summary>  
+  **Solution: src/store.js**
+
   ```
   import { createStore } from 'redux';
   import guestlist_reducer from './ducks/guestList';
   export default createStore(guestlist_reducer);
   ```
-  </details>
 
 6. In `index.js`:
     - Import `Provider` (from react-redux) and the store.
@@ -42,7 +42,8 @@ You are in charge of building an app that can manage the guest list of DevMounta
     - Pass the store, as a prop, to `Provider`.
 
 
-  <details><summary><code>Solution: src/index.js</code></summary>
+  **Solution: src/index.js**
+
   ```
   import React from 'react';
 
@@ -59,7 +60,6 @@ You are in charge of building an app that can manage the guest list of DevMounta
     </Provider>, document.getElementById('root'));
   registerServiceWorker();
   ```
-  </details>
 
 ### Drill-2 (Display guest list)
 
@@ -84,7 +84,7 @@ You are in charge of building an app that can manage the guest list of DevMounta
     </div>
     ```
 
-<details><summary><code>Solution: App.js</code></summary>
+**Solution: App.js**
 ```
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
@@ -123,7 +123,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(App);
 ```
-</details>
 
 ### Drill-3 (Add/Delete guests)
 1. `npm install`
@@ -142,7 +141,7 @@ export default connect(mapStateToProps)(App);
     - When the `add` button is clicked, you need to call the `addGuest` function (on props) and pass in a guest name (the value of the input, which is on App's component state)
 5. You should be able to add guests to the list now. Following a similar process as you did add a guest, add the functionality of removing a guest when the `Remove` button is clicked.
 
-<details><summary><code>Solution: App.js</code></summary>
+**Solution: App.js**
 ```
 import React, { Component } from 'react';
 import { addGuest, removeGuest } from './ducks/guestList';
@@ -209,8 +208,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps,{ addGuest, removeGuest })(App);
 ```
-</details>
-<details><summary><code>Solution: guestList.js</code></summary>
+**Solution: guestList.js**
 ```
 const ADD_GUEST = 'ADD_GUEST';
 const REMOVE_GUEST = 'REMOVE_GUEST';
@@ -244,7 +242,6 @@ export default function reducer(state = initialState, action) {
     }
 }
 ```
-</details>
 
 ### Drill-4 (Update guest names)
 1. `npm install`
@@ -254,7 +251,7 @@ export default function reducer(state = initialState, action) {
 5. Notice in the component state for `App.js` that you are keeping track of the guest that you want to edit, and the index of that guest in the guest array. You can see how this information is being set by inspecting the `editName` function.
     - The `EditGuest` component needs some information from the `App` component: the guest to edit, the guest to edit's index, and the `hide` function.
 
-<details><summary><code>Solution</code></summary>
+**Solution**
 ```
 {
    this.state.edit ?
@@ -265,7 +262,6 @@ export default function reducer(state = initialState, action) {
         : null
 }
 ```
-</details>
 
 6. In `EditGuest.js`:
     - Add a `value` attribute to the input box and set the value to `this.state.text`
