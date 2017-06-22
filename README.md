@@ -13,16 +13,16 @@ You are in charge of building an app that can manage the guest list of DevMounta
 4. Inside of the `ducks` folder, create a file called `guestList.js`.
     - Create a reducer. The reducer is just a function that takes in state and an action. For now, have the reducer immediately return state. Export the reducer.
 
-  **Solution: src/ducks/guestList.js**
-
+<details>
+  <summary>**Solution: src/ducks/guestList.js**</summary>
   ```
   const initialState = {}
 
   export default function reducer(state = initialState, action) {
     return state;
   }
-
   ```
+</details>
 
 5. Create a `store.js` file in the `src` folder.
     - In `store.js` import `createStore` ( from redux ) and the reducer.
@@ -42,24 +42,24 @@ You are in charge of building an app that can manage the guest list of DevMounta
     - Pass the store, as a prop, to `Provider`.
 
 
-  **Solution: src/index.js**
+**Solution: src/index.js**
 
-  ```
-  import React from 'react';
+```
+import React from 'react';
 
-  import ReactDOM from 'react-dom';
-  import { Provider } from 'react-redux';
-  import App from './App';
-  import store from './store';
-  import registerServiceWorker from './registerServiceWorker';
-  import './index.css';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import App from './App';
+import store from './store';
+import registerServiceWorker from './registerServiceWorker';
+import './index.css';
 
-  ReactDOM.render(
-    <Provider store={store}>
-      <App />
-    </Provider>, document.getElementById('root'));
-  registerServiceWorker();
-  ```
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>, document.getElementById('root'));
+registerServiceWorker();
+```
 
 ### Drill-2 (Display guest list)
 
