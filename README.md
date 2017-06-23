@@ -68,7 +68,7 @@ In `index.js`:
 
 ### Drill-2 (Display guest list)
 
-Building on the work you did in drill-1, you will not connect a component to the store so that you can display the guest list.
+Building on the work you did in drill-1, you will now connect a component to the store so that you can display the guest list.
 
   * `npm install`
   * Install `redux` and `react-redux`.
