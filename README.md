@@ -249,7 +249,7 @@ Your guest list needs to be able to add and remove guests.
     export default function reducer(state = initialState, action) {
       switch (action.type) {
         case ADD_GUEST:
-          return Object.assign({}, state, {guests: [...state, action.payload]});
+          return Object.assign({}, state, {guests: [...state.guests, action.payload]});
         case REMOVE_GUEST:
           return Object.assign({}, state, {guests: state.guests.filter((guest, i) => i !== action.payload)});
         default:
@@ -265,28 +265,692 @@ For drill-4, you will have limited help. You have seen the process of building a
 
 * `npm install`
 * Install `redux` and `react-redux`.
-* A child component to `App.js` called `EditGuest` (a modal) has been created for you.
-* Import the `EditGuest` component in `App.js`. Put an instance of the EditGuest component under the form tags, in the ternary operator.
-* Notice in the component state for `App.js` that you are keeping track of the guest that you want to edit, and the index of that guest in the guest array. You can see how this information is being set by inspecting the `editName` function.
-  * The `EditGuest` component needs some information from the `App` component: the guest to edit, the guest to edit's index, and the `hide` function.
 
-    <details><summary><code><b>EditGuest</b></code></summary>
+  1. Create `EditGuest.js` in `src`.
+  2. The `EditGuest` component should be a view component  (just a function, not a class). Go ahead and set up your component.
+  
+  * Import `./EditGuest.css`  
+
+    <details>
+      <summary><code><b>EditGuest.js setup</b></code></summary>
 
     ```
-    {
-      this.state.edit ?
-            <EditGuest
-              guest={this.state.guestToEdit}
-              index={this.state.guestIndex}
-              hide={this.hideModal} />
-            : null
+    import React from 'react';
+    import './EditGuest.css';
+
+    function EditGuest(props) {
+        return (
+
+        )
     }
+
+    export default EditGuest;
     ```
     </details>
 
-  * In `EditGuest.js`:
-    * Add a `value` attribute to the input box and set the value to `this.state.text`
-    * At this point, when you click on the edit button, the modal should appear and you should see the name you are editing in the input box.
-    * Set up the component so that it is keeping track of any changes to the input box.
-  * By now, you are hopefully getting the hang of creating an action creator, importing the action creator and passing it in to the `connect` method, and then referencing it on `props`.
-    * Add functionality to the `update` button in `EditGuest.js` so that when it is clicked, it updates the guests name, and closes the modal.
+  3. Paste the following code inside the `return`:
+  ```
+      <div className="modal-bg">
+        <div className="modal">
+          <input className="modal-input"/>
+          <button className="modal-btn">Update</button>
+          <button className="modal-btn">Cancel</button>
+        </div>
+      </div>
+
+  ```
+4. Add `edit: false` to the state object in the constructor. Import the `EditGuest` component to `App.js`. Use a ternary operator to test whether `this.state.edit` is true or false. If true, display an instance of the `EditGuest` component. This code should be in the jsx under the `form` tags.
+
+    <details>
+    <summary><code><b>Solution</b></code></summary>
+
+    ```
+            {
+              this.state.edit ?
+                    <EditGuest />
+                    : null
+            }
+    ```
+
+    </details>
+
+5. We now need to add functionality to the edit button. When the edit button is clicked, the modal need to show. Create a method called `showModal` on the App class. The method should set `this.state.edit` to `true` when the `edit` button is clicked on.
+
+    <details>
+    <summary><code><b>App.js</b></code></summary>
+
+    ```
+    import React, { Component } from 'react';
+    import { addGuest, removeGuest } from './ducks/guestList';
+    import EditGuest from './EditGuest';
+    import { connect } from 'react-redux';
+    import './App.css';
+
+    class App extends Component {
+      constructor() {
+        super();
+        this.state = {
+          text: '',
+          edit: false
+        }
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.showModal = this.showModal.bind(this);
+      }
+
+      handleInputChange(e) {
+        this.setState({
+          text: e.target.value
+        })
+      }
+      handleSubmit(e) {
+        e.preventDefault();
+        this.props.addGuest(this.state.text);
+        this.setState({
+          text: ''
+        })
+      }
+
+      showModal() {
+        this.setState({
+          edit: true
+        })
+      }
+
+      render() {
+        return (
+          <div className="App">
+            <h1>DevMountain Hackathon</h1>
+            <h3>Guest List:</h3>
+            <ul>
+              {
+                  this.props.list.map( (guest, i) => {
+                    return (
+                      <div key={i} className="list-item">
+                        <li>{guest}</li>
+                        <div>
+                          <button
+                          onClick={this.showModal}
+                          >Edit</button>
+                          <button onClick={()=> this.props.removeGuest(i)}>Remove</button>
+                        </div> 
+                      </div>
+                    )
+                  })
+              }
+            </ul>
+            <form
+              onSubmit={this.handleSubmit}
+              className="add-guest">
+              Add guest: <input
+              value={this.state.text}
+              onChange={this.handleInputChange}
+              />
+              <button>Add</button>
+            </form>
+            {
+              this.state.edit ? 
+              <EditGuest />
+              : null
+            }
+            
+          </div>
+        );
+      }
+    }
+
+    function mapStateToProps(state) {
+      return {
+        list: state.guests
+      }
+    }
+
+    export default connect(mapStateToProps,{ addGuest, removeGuest })(App);
+    ```
+
+    </details>
+
+6. The modal should close if the cancel button is clicked. Create a method called `hideModal` on the App class that sets `this.state.edit` to false. Pass this method as a prop to the EditGuest component and use it to add functionality to the cancel button.
+
+    <details>
+    <summary><code><b>App.js</b></code></summary>
+
+      ```
+      import React, { Component } from 'react';
+      import { addGuest, removeGuest } from './ducks/guestList';
+      import EditGuest from './EditGuest';
+      import { connect } from 'react-redux';
+      import './App.css';
+
+      class App extends Component {
+        constructor() {
+          super();
+          this.state = {
+            text: '',
+            edit: false
+          }
+          this.handleInputChange = this.handleInputChange.bind(this);
+          this.handleSubmit = this.handleSubmit.bind(this);
+          this.showModal = this.showModal.bind(this);
+          this.hideModal = this.hideModal.bind(this);
+        }
+
+        handleInputChange(e) {
+          this.setState({
+            text: e.target.value
+          })
+        }
+        handleSubmit(e) {
+          e.preventDefault();
+          this.props.addGuest(this.state.text);
+          this.setState({
+            text: ''
+          })
+        }
+
+        showModal() {
+          this.setState({
+            edit: true
+          })
+        }
+
+        hideModal() {
+          this.setState({
+            edit: false
+          })
+        }
+
+        render() {
+          return (
+            <div className="App">
+              <h1>DevMountain Hackathon</h1>
+              <h3>Guest List:</h3>
+              <ul>
+                {
+                    this.props.list.map( (guest, i) => {
+                      return (
+                        <div key={i} className="list-item">
+                          <li>{guest}</li>
+                          <div>
+                            <button
+                            onClick={this.showModal}
+                            >Edit</button>
+                            <button onClick={()=> this.props.removeGuest(i)}>Remove</button>
+                          </div> 
+                        </div>
+                      )
+                    })
+                }
+              </ul>
+              <form
+                onSubmit={this.handleSubmit}
+                className="add-guest">
+                Add guest: <input
+                value={this.state.text}
+                onChange={this.handleInputChange}
+                />
+                <button>Add</button>
+              </form>
+              {
+                this.state.edit ? 
+                <EditGuest
+                  hide={this.hideModal} />
+                : null
+              }
+              
+            </div>
+          );
+        }
+      }
+
+      function mapStateToProps(state) {
+        return {
+          list: state.guests
+        }
+      }
+
+      export default connect(mapStateToProps,{ addGuest, removeGuest })(App);
+      ```
+
+
+    </details>
+
+    <details>
+    <summary><code><b>EditGuest.js</b></code></summary>
+
+    ```
+    import React from 'react';
+    import './EditGuest.css';
+
+    function EditGuest(props) {
+        return (
+            <div className="modal-bg">
+                <div className="modal">
+                    <input className="modal-input"/>
+                    <button className="modal-btn">Update</button>
+                    <button 
+                    onClick={props.hide}
+                    className="modal-btn">Cancel</button>
+                </div>
+            </div>
+      )
+    }
+
+    export default EditGuest;
+    ```
+
+    </details>
+
+7. Your modal should now show when you click edit, and hide when you click cancel. We now need to populate the input box on the modal with the name that we want to edit.
+   * We will keep track of the name and index of the guest we are editing in App's component state.
+
+   ```
+   this.state = {
+      text: '',
+      edit: false,
+      guestToEdit: '',
+      index: 0
+    }
+   ```
+
+   * We need to pass the guest name and index to our showModal method, and we have access to both while we map over `this.props.list`. When then `Edit` button is clicked, is should invoke `this.showModal` and pass in `guest` and `i` as arguments.
+
+      <details>
+      <summary><code><b>Solution</b></code></summary>
+
+      ```
+
+      this.props.list.map( (guest, i) => {
+                    return (
+                      <div key={i} className="list-item">
+                        <li>{guest}</li>
+                        <div>
+                          <button
+                          onClick={()=> this.showModal(guest, i)}
+                          >Edit</button>
+                          <button onClick={()=> this.props.removeGuest(i)}>Remove</button>
+                        </div> 
+                      </div>
+                    )
+                  })
+
+      ```
+      </details>
+
+   * Update the showModal method so that it updates `guestToEdit` and `index` on state. 
+
+      <details>
+      <summary><code><b>Solution</b></code></summary>
+
+      ```
+
+      <input
+                value={props.guest} 
+                onChange={props.edit}
+                className="modal-input"/>
+
+      ```
+      </details>
+
+8. Pass the guest name (on App state) to the EditGuest component as a prop. Display the guest's name in the modal's input (as value).
+
+9. When you click the edit button, the modal should appear with the correct guest name displayed in the input. We now need a way to keep track of the changes that we make to the name.
+   * Create a method on the App component called `editName`. This method should update `this.state.guestToEdit` with the value typed in to the EditGuest component's input.
+     * HINT: Don't forget to bind!
+
+      <details>
+      <summary><code><b>editName</b></code></summary>
+
+      ```
+
+      editName(e) {
+        this.setState({
+          guestToEdit: e.target.value
+        })
+      }
+      ```
+      </details>
+
+  * Pass the `editName` method as a prop to the EditGuest component. In EditGuest.js, use the `onChange` event with the `editName` method as the event handler. 
+
+    <details>
+
+    <summary><code><b>Solution</b></code></summary>
+
+    ```
+    
+
+    {
+          this.state.edit ? 
+          <EditGuest
+            hide={this.hideModal}
+            guest={this.state.guestToEdit}
+            edit={this.editName} />
+          : null
+        }  
+    ```
+   </details>
+
+  <details>
+   <summary><code><b>input (EditGuest.js)</b></code></summary>
+
+  ```
+
+   <input
+     value={props.guest} 
+     onChange={props.edit}
+     className="modal-input"/>
+   ```
+  </details>
+
+10. We now need to make the update button work. If we are going to update information in our redux store then we need to head over to our `guestList.js` file.
+    * At the top of the file, create a new constant:
+    ```
+    const UPDATE_GUEST = 'UPDATE_GUEST';
+    ```  
+
+    * Export a function called updateName with two parameters, `name` and `index`.
+    * The updateName function should return an object with type and payload properties. The value of `type` should be `UPDATE_GUEST`. The value of `payload` should be an object that contains the values of the name and index parameters.
+
+      <details>
+
+      <summary><code><b>guestList.js</b></code></summary>
+
+      ```
+
+      export function updateName(name, index) {
+        return {
+          type: UPDATE_GUEST,
+          payload: {
+            name: name, 
+            index: index
+          }
+        }
+      }
+      ```
+
+      </details>
+
+    * Update the reducer to handle an action with the type of `UPDATE_GUEST`. Use the information in `action.payload` to return a new piece of state with the updated user name.
+
+      <details>
+      <summary><code><b>guestList.js</b></code></summary>
+
+      ```
+      case UPDATE_GUEST:
+        return {
+          guests: state.guests.map((name, i) => {
+            if (action.payload.index === i) return action.payload.name;
+            return name;
+          })
+        } 
+      ```
+      </details>
+
+    * In `App.js`, import the `updateName` function. Add it to the object that is passed as the second argument in the connect method. 
+      <details>
+      <summary><code><b>Solution</b></code></summary>
+
+      ```
+      export default connect(mapStateToProps,{ addGuest, removeGuest, updateName })(App);
+      ```
+      </details>
+
+    * Create a method on the App component called `updateGuestName`. This method will invoke `updateName` (action creator) and pass in `guestToEdit` and `index` from `App's` state. This method will also invoke the `hideModal` method.
+
+      * HINT: Don't forget to bind!
+
+
+        <details>
+
+        <summary><code><b>updateGuestName</b></code></summary>
+
+        ```
+        updateGuestName() {
+            this.props.updateName(this.state.guestToEdit, this.state.index);
+            this.hideModal();
+          }
+        ```
+        </details>
+    * Pass the `updateGuestName` method as a prop to the EditGuest component. In `EditGuest.js`, use the method as an event handler for when the `update` button gets clicked.
+
+
+      <details>
+      <summary><code><b>App.js</b></code></summary>
+
+      ```
+        <EditGuest
+            hide={this.hideModal}
+            guest={this.state.guestToEdit}
+            edit={this.editName}
+            update={this.updateGuestName} />
+      ```
+      </details>
+
+      <details>
+      <summary><code><b>EditGuest.js</b></code></summary>
+
+      ```
+        <button 
+          onClick={props.update}
+          className="modal-btn">Update</button>
+      ```
+      </details>
+
+Congrats! You should now have a fully working guest list that can add, remove, and edit guest names.
+
+**Final Solution:**
+
+<details>
+
+<summary><code><b>App.js</b></code></summary>
+
+```
+import React, { Component } from 'react';
+import { addGuest, removeGuest, updateName } from './ducks/guestList';
+import EditGuest from './EditGuest';
+import { connect } from 'react-redux';
+import './App.css';
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      text: '',
+      edit: false,
+      guestToEdit: '',
+      index: 0
+    }
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+    this.editName = this.editName.bind(this);
+    this.updateGuestName = this.updateGuestName.bind(this)
+  }
+
+  handleInputChange(e) {
+    this.setState({
+      text: e.target.value
+    })
+  }
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.addGuest(this.state.text);
+    this.setState({
+      text: ''
+    })
+  }
+
+  showModal(guest, index) {
+    this.setState({
+      edit: true,
+      guestToEdit: guest,
+      index: index
+    })
+  }
+
+  hideModal() {
+    this.setState({
+      edit: false
+    })
+  }
+
+  editName(e) {
+    this.setState({
+      guestToEdit: e.target.value
+    })
+  }
+
+  updateGuestName() {
+    this.props.updateName(this.state.guestToEdit, this.state.index)
+    this.hideModal()
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>DevMountain Hackathon</h1>
+        <h3>Guest List:</h3>
+        <ul>
+          {
+              this.props.list.map( (guest, i) => {
+                return (
+                  <div key={i} className="list-item">
+                    <li>{guest}</li>
+                    <div>
+                      <button
+                      onClick={()=>this.showModal( guest, i)}
+                      >Edit</button>
+                      <button onClick={()=> this.props.removeGuest(i)}>Remove</button>
+                    </div> 
+                  </div>
+                )
+              })
+          }
+        </ul>
+        <form
+          onSubmit={this.handleSubmit}
+          className="add-guest">
+          Add guest: <input
+          value={this.state.text}
+          onChange={this.handleInputChange}
+          />
+          <button>Add</button>
+        </form>
+        {
+          this.state.edit ? 
+          <EditGuest
+            hide={this.hideModal}
+            guest={this.state.guestToEdit}
+            edit={this.editName}
+            update={this.updateGuestName} />
+          : null
+        }
+        
+      </div>
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    list: state.guests
+  }
+}
+
+export default connect(mapStateToProps,{ addGuest, removeGuest, updateName })(App);
+
+
+```
+</details>
+
+<details>
+
+<summary><code><b>EditGuest.js</b></code></summary>
+
+```
+import React from 'react';
+import './EditGuest.css';
+
+function EditGuest(props) {
+    return (
+        <div className="modal-bg">
+            <div className="modal">
+                <input
+                value={props.guest} 
+                onChange={props.edit}
+                className="modal-input"/>
+                <button 
+                onClick={props.update}
+                className="modal-btn">Update</button>
+                <button 
+                onClick={props.hide}
+                className="modal-btn">Cancel</button>
+            </div>
+        </div>
+  )
+}
+
+export default EditGuest;
+
+```
+</details>
+
+<details>
+
+<summary><code><b>guestList.js</b></code></summary>
+
+```
+const ADD_GUEST = 'ADD_GUEST';
+const REMOVE_GUEST = 'REMOVE_GUEST';
+const UPDATE_GUEST = 'UPDATE_GUEST';
+
+const initialState = {
+  guests: ['Tony Stark', 'Steve Rodgers', ' Nick Fury', 'Natasha Romanova', 'Clint Barton', 'Bruce Banner', 'Wanda Maximoff']
+};
+
+export function addGuest(guest) {
+  return {
+    type: ADD_GUEST,
+    payload: guest
+  }
+}
+
+export function removeGuest(i) {
+  return {
+    type: REMOVE_GUEST,
+    payload: i
+  }
+}
+
+export function updateName(name, index) {
+  return {
+    type: UPDATE_GUEST,
+    payload: {
+      name: name, 
+      index: index
+    }
+  }
+}
+
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    case ADD_GUEST:
+      return Object.assign({}, state, {guests: [...state.guests, action.payload]});
+    case REMOVE_GUEST:
+      return Object.assign({}, state, {guests: state.guests.filter((guest, i) => i !== action.payload)});
+    case UPDATE_GUEST:
+      return {
+        guests: state.guests.map((name, i) => {
+          if (action.payload.index === i) return action.payload.name;
+          return name;
+        })
+      } 
+    default:
+      return state;
+    }
+}
+
+```
+</details>
