@@ -954,3 +954,157 @@ export default function reducer(state = initialState, action) {
 
 ```
 </details>
+
+### Drill-5 (HTTP requests)
+
+##### NOTE: This drill is completely separate from the previous drills.
+
+Goal: You will make HTTP requests to the Star Wars API (https://swapi.co) to get information on Star Wars characters, planets, and starships.
+
+1. This react app is already set up with redux.
+   - Run `npm install` to install dependecies.
+
+2. Run `npm start` and take a look at the browser. If you are a Star Wars fan, you can tell that I have my movies mixed up. Apparently, Harry Potter is not in Star Wars...oops!
+
+   * Help me fix my app by making http requests to the Star Wars API so I can show Star Wars people, planets, and starships.
+3. In order to make HTTP requests, we will use the `axios` library. Since we will be making these HTTP requests in our action creators, we will need an additional library called `redux-promise-middleware`.
+   - Run `npm install --save axios redux-promise-middleware`.
+4. We now need set up our app to use the middleware we just installed.
+    - In `store.js`, import `promiseMiddlware` from `redux-promise-middlware` and `applyMiddlware` from `redux`. 
+    - The second argument in the `createStore` method will be the invocation of `applyMiddleware`. Pass in `promiseMiddlware` as the only argument to `applyMiddlware`. 
+    - NOTE: Be sure to invoke `promiseMiddlware`. See below.
+
+    <details>
+      <summary><code>store.js</code></summary>
+
+      ```
+
+      import { createStore, applyMiddleware } from 'redux';
+      import reducer from './ducks/star_wars';
+      import promiseMiddlware from 'redux-promise-middleware';
+
+      export default createStore(reducer, applyMiddleware(promiseMiddlware()));
+      ```
+    </details>
+5. In `star_wars.js`
+    - Import 'axios'
+    - Export a function called `getPeople`. We will make the HTTP request in the `getPeople` function. Using `axios`, make a `GET` request to
+      - `https://swapi.co/api/people`
+      - Resolve promise with `.then` and return `response.data.results` 
+    - `getPeople` should return an object with `type` and `payload` properties. 
+    - Create a constant for your action `type`.
+      - `redux-promise-middleware` will concat '_FULFILLED' to the end of your action type. Remember that the case you are testing for the switch statement is [ACTION TYPE] + '_FULFILLED'.
+    - The value of the action payload should be the result of the HTTP request.  
+    - Complete the switch statment in your reducer function so that it updates state with the response from the HTTP request (sent in the action).
+
+    <details>
+    <summary><code>star_wars.js</code></summary>
+
+    ```
+
+    import axios from 'axios';
+
+    const initialState = {
+        people: [{name: 'Harry Potter'}, {name: 'Gandolf'}],
+        planets: [{name: 'Xandar'}, {name: 'Hala'}],
+        starships: [{name: 'USS Enterprise'}, {name: 'Klingon Bird-of-Prey'}]
+    }
+
+    const GET_PEOPLE = 'GET_PEOPLE';
+
+    export function getPeople() {
+
+        const people = axios.get('https://swapi.co/api/people/')
+        .then( res => {
+            console.log('res', res);
+            return res.data.results;
+        })
+
+        return {
+            type: GET_PEOPLE,
+            payload: people
+        }
+    }
+
+    export default function(state = initialState, action) {
+        switch (action.type) {
+            case GET_PEOPLE + '_FULFILLED':
+                return Object.assign({}, state, { people: action.payload })
+            default:
+                return state;
+        }
+    }
+    ```
+    </details>
+
+  6. In `App.js`:
+      - Import your action creator (getPeople) from `star_wars.js`.
+      - The second argument in the `connect` method is going to be an object. This is where we need to put the action creator that we just imported. If this process if unfamiliar, you should revisit the previous drills for more instructions/explainations of this process.
+      - The `getPeople` action creator should be invoked when the `Get correct people` button is clicked.
+      <details>
+      <summary><code>App.js</code></summary>
+
+      ```
+
+      import React, { Component } from 'react';
+      import { connect } from 'react-redux';
+      import { getPeople } from './ducks/star_wars';
+      import './App.css';
+
+      class App extends Component {
+
+        render() {
+
+          const people = this.props.people.map( (person, i) => {
+            return <p key={i}>{ person.name }</p>
+          })
+          const planets = this.props.planets.map( (planet,i) => {
+            return <p key={i}>{ planet.name }</p>
+          })
+          const starships = this.props.starships.map( (starship, i) => {
+            return <p key={i}>{ starship.name }</p>
+          })
+
+          return (
+            <div className='App'>
+              <h1>Star Wars Stuff!</h1>
+              <div className='lists-wrap'>
+                <div>
+                  <button 
+                    onClick={this.props.getPeople}
+                    >Get correct people</button>
+                  <h3>Characters:</h3>
+                  { people }
+                </div> 
+                <div>
+                  <button>Get correct planets</button>
+                  <h3>Planets:</h3>
+                  { planets }
+                </div> 
+                <div>
+                  <button>Get correct starships</button>
+                  <h3>Starships:</h3>
+                  { starships }
+                </div> 
+              </div> 
+            </div>
+          );
+        }
+      }
+
+      function mapStateToProps(state) {
+        return {
+          people: state.people,
+          planets: state.planets,
+          starships: state.starships
+        }
+      }
+
+      export default connect(mapStateToProps, { getPeople })(App);
+      ```
+      </details>
+
+  7. Following the same pattern that was just used to get the correct Star Wars people, make the other two buttons (planets and starships) functional.
+      - Use a GET request for the following:
+        - planets: 'https://swapi.co/api/planets/'
+        - starships: 'https://swapi.co/api/starships/'
