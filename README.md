@@ -993,7 +993,8 @@ Goal: You will make HTTP requests to the Star Wars API (https://swapi.co) to get
       - Resolve the promise with `.then` and return `response.data.results` 
     - `getPeople` should return an object with `type` and `payload` properties. 
     - Create a constant for your action `type`.
-      - `redux-promise-middleware` will concat '_FULFILLED' to the end of your action type. - Remember that the case you are testing for (in the switch statement) is [ACTION TYPE] + '_FULFILLED'.
+      - `redux-promise-middleware` will concat '_FULFILLED' to the end of your action type. 
+      - Remember that the case you are testing for (in the switch statement) is [ACTION TYPE] + '_FULFILLED'.
     - The value of the action payload should be the result of the HTTP request.  
     - Complete the switch statment in your reducer function so that it updates state with the response from the HTTP request (sent in the action).
 
