@@ -969,7 +969,7 @@ Goal: You will make HTTP requests to the Star Wars API (https://swapi.co) to get
    * Help me fix my app by making http requests to the Star Wars API so I can show Star Wars people, planets, and starships.
 3. In order to make HTTP requests, we will use the `axios` library. Since we will be making these HTTP requests in our action creators, we will need an additional library called `redux-promise-middleware`.
    - Run `npm install --save axios redux-promise-middleware`.
-4. We now need set up our app to use the middleware we just installed.
+4. We now need to set up our app to use the middleware we just installed.
     - In `store.js`, import `promiseMiddlware` from `redux-promise-middlware` and `applyMiddlware` from `redux`. 
     - The second argument in the `createStore` method will be the invocation of `applyMiddleware`. Pass in `promiseMiddlware` as the only argument to `applyMiddlware`. 
     - NOTE: Be sure to invoke `promiseMiddlware`. See below.
@@ -990,10 +990,10 @@ Goal: You will make HTTP requests to the Star Wars API (https://swapi.co) to get
     - Import 'axios'
     - Export a function called `getPeople`. We will make the HTTP request in the `getPeople` function. Using `axios`, make a `GET` request to
       - `https://swapi.co/api/people`
-      - Resolve promise with `.then` and return `response.data.results` 
+      - Resolve the promise with `.then` and return `response.data.results` 
     - `getPeople` should return an object with `type` and `payload` properties. 
     - Create a constant for your action `type`.
-      - `redux-promise-middleware` will concat '_FULFILLED' to the end of your action type. Remember that the case you are testing for the switch statement is [ACTION TYPE] + '_FULFILLED'.
+      - `redux-promise-middleware` will concat '_FULFILLED' to the end of your action type. - Remember that the case you are testing for (in the switch statement) is [ACTION TYPE] + '_FULFILLED'.
     - The value of the action payload should be the result of the HTTP request.  
     - Complete the switch statment in your reducer function so that it updates state with the response from the HTTP request (sent in the action).
 
