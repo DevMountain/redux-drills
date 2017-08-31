@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { addGuest, removeGuest } from './ducks/guestList';
 import { connect } from 'react-redux';
-import EditGuest from './components/EditGuest/EditGuest';
 import './App.css';
 
 
@@ -84,7 +83,7 @@ class App extends Component {
         </form>
         {
            this.state.edit ?
-                <EditGuest />
+                {/* EditGuest */}
                 : null
         }
       </div>
@@ -94,7 +93,7 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    list: state
+    list: state.guests
   }
 }
 

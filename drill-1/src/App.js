@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+
 import { connect } from 'react-redux'
 import { addGuest, removeGuest } from './ducks/guestList';
+
 import './App.css';
 
 class App extends Component {

@@ -18,23 +18,12 @@
   font-size: large;
 }
 
-.dm-header {
-  background: #DA2D7B;
-  color: white;
-  margin: 0px;
-  height: 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.create-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+.lists-wrap {
+  display: flex;
+  justify-content: space-around;
 }
