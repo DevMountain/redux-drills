@@ -10,23 +10,11 @@ class App extends Component {
     super();
     this.state = {
       text: '',
-      edit: false,
-      guestToEdit: '',
-      guestIndex: 0
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.editName = this.editName.bind(this);
-    this.hideModal = this.hideModal.bind(this);
   }
 
-  editName(guest, i) {
-    this.setState({
-      edit: true,
-      guestToEdit: guest,
-      guestIndex: i
-    })
-  }
 
   handleInputChange(e) {
     this.setState({
@@ -41,11 +29,7 @@ class App extends Component {
     })
   }
 
-  hideModal() {
-    this.setState({
-      edit: false
-    })
-  }
+  
 
   render() {
     return (
@@ -81,11 +65,9 @@ class App extends Component {
             type=""
             className="">Add</button>
         </form>
-        {
-           this.state.edit ?
-                {/* EditGuest */}
-                : null
-        }
+        
+
+
       </div>
     );
   }
